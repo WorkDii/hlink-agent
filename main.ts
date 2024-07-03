@@ -1,8 +1,12 @@
-export function add(a: number, b: number): number {
-  return a + b;
-}
+import { Hono } from "@hono/hono";
+import { triggerDataSync } from "./visitdrug/sync.ts";
 
-// Learn more at https://deno.land/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  console.log("Add 2 + 3 =", add(2, 3));
-}
+const app = new Hono({});
+app.get("/", (c) => {
+  return c.json({ message: "Hello World 10" });
+});
+
+Deno.serve({ port: 8989 }, app.fetch);
+
+triggerDataSync();
+// triggerDataReSync();

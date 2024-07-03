@@ -1,5 +1,19 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts"
-  }
+    "dev": "deno run --watch -A main.ts",
+    "exe": "deno compile -A --target=x86_64-pc-windows-msvc --output=out/hlink-agent main.ts"
+  },
+  "imports": {
+    "@directus/sdk": "npm:@directus/sdk@^16.1.1",
+    "@hono/hono": "jsr:@hono/hono@^4.4.11",
+    "@std/dotenv": "jsr:@std/dotenv@^0.224.2",
+    "@std/log": "jsr:@std/log@^0.224.4",
+    "date-fns": "npm:date-fns@^3.6.0",
+    "mysql2": "npm:mysql2@^3.10.2/promise",
+    "p-map": "npm:p-map@^7.0.2",
+    "zod": "npm:zod@^3.23.8"
+  },
+  "unstable": [
+    "cron"
+  ]
 }
