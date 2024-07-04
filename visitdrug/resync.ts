@@ -1,9 +1,7 @@
 import { aggregate, deleteItems } from "@directus/sdk";
 import { directusClient } from "../lib/directus.ts";
-import {
-  insertJhcisVisitdrugItemToDirectus,
-  listJhcisVisitDrugItem,
-} from "./sync.ts";
+import { insertJhcisVisitdrugItemToDirectus } from "./insertJhcisVisitdrugItemToDirectus.ts";
+import { listJhcisVisitDrugItem } from "./listJhcisVisitDrugItem.ts";
 import { env } from "../lib/env.ts";
 import { con } from "../lib/mysql-client.ts";
 import { info } from "../lib/log.ts";

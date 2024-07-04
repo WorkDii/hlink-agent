@@ -1,5 +1,5 @@
 import { Hono } from "@hono/hono";
-import { triggerDataSync } from "./visitdrug/sync.ts";
+import { triggerSyncDuringTheDay } from "./visitdrug/syncDuringTheDay.ts";
 import { env } from "./lib/env.ts";
 import { triggerDataReSync } from "./visitdrug/resync.ts";
 
@@ -10,7 +10,7 @@ app.get("/", (c) => {
 
 Deno.serve({ port: 8989 }, app.fetch);
 
-triggerDataSync();
 if (!env.IS_DEV) {
+  triggerSyncDuringTheDay();
   triggerDataReSync();
 }
