@@ -10,6 +10,7 @@ import { info } from "../lib/log.ts";
 import { RowDataPacket } from "mysql2";
 import pMap from "p-map";
 import { addDays, addYears, format, startOfDay } from "date-fns";
+import { dateTime2TimeBangkok } from "../lib/utils.ts";
 
 function removeItemHLink(startDate: string, endDate: string) {
   return directusClient.request(
@@ -17,8 +18,8 @@ function removeItemHLink(startDate: string, endDate: string) {
       filter: {
         pcucode: { _eq: env.PCU_CODE },
         dateupdate: {
-          _gte: startDate,
-          _lt: endDate,
+          _gte: dateTime2TimeBangkok(startDate),
+          _lt: dateTime2TimeBangkok(endDate),
         },
       },
       // fix remove all data filtered
@@ -35,7 +36,7 @@ async function countAll(startDate: string) {
       query: {
         filter: {
           pcucode: { _eq: env.PCU_CODE },
-          dateupdate: { _gte: startDate },
+          dateupdate: { _gte: dateTime2TimeBangkok(startDate) },
         },
       },
       aggregate: { count: ["*"] },
@@ -89,8 +90,8 @@ async function countMonth(startDate: string) {
             filter: {
               pcucode: { _eq: env.PCU_CODE },
               dateupdate: {
-                _gte: startDateOfThisMonth,
-                _lt: startDateOfNextMonth,
+                _gte: dateTime2TimeBangkok(startDateOfThisMonth),
+                _lt: dateTime2TimeBangkok(startDateOfNextMonth),
               },
             },
           },
@@ -151,8 +152,8 @@ async function countDay(
             filter: {
               pcucode: { _eq: env.PCU_CODE },
               dateupdate: {
-                _gte: thisDate,
-                _lt: nextDate,
+                _gte: dateTime2TimeBangkok(thisDate),
+                _lt: dateTime2TimeBangkok(nextDate),
               },
             },
           },
@@ -175,7 +176,7 @@ async function countDay(
 export function triggerDataReSync() {
   info("start resync visitdrug", new Date());
   const oneYearAgo = format(startOfDay(addYears(new Date(), -1)), "yyyy-MM-dd");
-  countAll(oneYearAgo).then((res) => {
+  countAll(oneYearAgo).then(() => {
     console.log("done resync visitdrug", new Date().toISOString());
   });
   Deno.cron("resync data cronjob", "30 3 * * *", async () => {

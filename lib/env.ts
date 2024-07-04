@@ -15,6 +15,10 @@ const envSchema = z.object({
   JHCIS_DB: z.string(),
   DRUG_SYNC_START_DATE: z.string(),
   DRUG_SYNC_SCHEDULE: z.string().optional(),
+  IS_DEV: z
+    .string()
+    .optional()
+    .transform((v) => v === "true"),
 });
 
 export const env = envSchema.parse(_env);
