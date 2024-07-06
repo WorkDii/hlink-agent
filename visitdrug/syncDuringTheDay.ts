@@ -29,23 +29,25 @@ async function job() {
     }
     const visitdrug = await listJhcisVisitDrugItem(lastDateUpdate);
     await insertJhcisVisitdrugItemToDirectus(visitdrug);
-    info("finish");
+    info("[syncDuringTheDay] finish");
   } catch (error) {
-    info(error);
+    info("[syncDuringTheDay] error sync visitdrug " + JSON.stringify(error));
   }
 }
 
 export function triggerSyncDuringTheDay() {
-  info("start syncDuringTheDay", new Date());
+  info("[syncDuringTheDay] start " + new Date());
   const schedule = env.DRUG_SYNC_SCHEDULE || DEFAULT_SCHEDULE;
   job();
   Deno.cron("syncDuringTheDay cronjob", schedule, async () => {
-    info(`running syncDuringTheDay ${schedule} NOW IS `, new Date());
+    info(
+      `[syncDuringTheDay] running syncDuringTheDay ${schedule} NOW IS ` +
+        new Date()
+    );
     try {
       await job();
-      info("finish");
     } catch (error) {
-      info("error sync visitdrug", error);
+      info("[syncDuringTheDay] error sync visitdrug " + JSON.stringify(error));
     }
   });
 }

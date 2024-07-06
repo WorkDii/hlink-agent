@@ -31,9 +31,7 @@ export async function insertJhcisVisitdrugItemToDirectus(data: VisitDrug[]) {
       );
       const inserted = await directusClient.request(createItem("visitdrug", d));
       info(
-        "inserted",
-        JSON.stringify(inserted),
-        `index: ${i + 1}/${data.length}`
+        `inserted: ${JSON.stringify(inserted)} index: ${i + 1}/${data.length}`
       );
       return inserted;
     },

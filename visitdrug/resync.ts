@@ -49,7 +49,7 @@ async function countAll(startDate: string) {
     [env.DRUG_SYNC_START_DATE, env.PCU_CODE, startDate]
   )) as [(RowDataPacket & { count: Number })[]];
   if (parseInt(countHLinkServer) !== data[0].count) {
-    info(`countAll jhcis: ${data[0].count} hlink: ${countHLinkServer}`);
+    info(`[rsync] countAll jhcis: ${data[0].count} hlink: ${countHLinkServer}`);
     await countMonth(startDate);
   }
 }
@@ -98,7 +98,7 @@ async function countMonth(startDate: string) {
       );
       if (parseInt(hlinkData[0].count) !== jD.count) {
         info(
-          `countMonth ${startDateOfThisMonth} jhcis: ${jD.count}  hlink: ${hlinkData[0].count}`
+          `[rsync] countMonth ${startDateOfThisMonth} jhcis: ${jD.count}  hlink: ${hlinkData[0].count}`
         );
         await countDay(startDateOfThisMonth, startDateOfNextMonth, startDate);
       }
@@ -135,7 +135,7 @@ async function countDay(
       const thisDate = format(jD.dateupdate, "yyyy-MM-dd");
       if (thisDate === format(new Date(), "yyyy-MM-dd")) {
         // prevent bug when today is not finished
-        info("skip today");
+        info("[rsync] skip today");
         return Promise.resolve();
       }
       const nextDate = format(addDays(jD.dateupdate, 1), "yyyy-MM-dd");
@@ -160,7 +160,7 @@ async function countDay(
       );
       if (parseInt(hlinkData[0].count) !== jD.count) {
         info(
-          `countDay ${thisDate} jhcis: ${jD.count}  hlink: ${hlinkData[0].count}`
+          `[rsync] countDay ${thisDate} jhcis: ${jD.count}  hlink: ${hlinkData[0].count}`
         );
         await removeItemHLink(thisDate, nextDate);
         const visitdate = await listJhcisVisitDrugItem(thisDate, nextDate);
@@ -172,22 +172,22 @@ async function countDay(
 }
 
 export function triggerDataReSync() {
-  info("start resync visitdrug", new Date());
+  info("[rsync] start resync visitdrug " + new Date());
   const oneYearAgo = format(startOfDay(addYears(new Date(), -1)), "yyyy-MM-dd");
   countAll(oneYearAgo).then(() => {
     console.log("done resync visitdrug", new Date().toISOString());
   });
   Deno.cron("resync data cronjob", "30 3 * * *", async () => {
-    info(`running a task at ' 30 3 * * *' NOW IS `, new Date());
+    info(`[rsync] running a task at ' 30 3 * * *' NOW IS ` + new Date());
     try {
       const oneYearAgo = format(
         startOfDay(addYears(new Date(), -1)),
         "yyyy-MM-dd"
       );
       await countAll(oneYearAgo);
-      info("done resync visitdrug", new Date().toISOString());
+      info("[rsync] done resync visitdrug " + new Date().toISOString());
     } catch (error) {
-      info("error resync visitdrug", error);
+      info("[rsync] error resync visitdrug " + JSON.stringify(error));
     }
   });
 }
