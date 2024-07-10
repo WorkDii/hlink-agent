@@ -14,7 +14,7 @@ export async function insertJhcisVisitdrugItemToDirectus(data: VisitDrug[]) {
           readItems("hospital_drug", {
             filter: { drugcode24: { _eq: d.drugcode24 } },
             fields: ["id"],
-          })
+          }),
         );
         d.hospital_drug = hospitalDrug.length ? hospitalDrug[0].id : null;
       }
@@ -27,14 +27,14 @@ export async function insertJhcisVisitdrugItemToDirectus(data: VisitDrug[]) {
               { pcucode: { _eq: d.pcucode } },
             ],
           },
-        })
+        }),
       );
       const inserted = await directusClient.request(createItem("visitdrug", d));
       info(
-        `inserted: ${JSON.stringify(inserted)} index: ${i + 1}/${data.length}`
+        `inserted: ${JSON.stringify(inserted)} index: ${i + 1}/${data.length}`,
       );
       return inserted;
     },
-    { concurrency: 1, stopOnError: false }
+    { concurrency: 1, stopOnError: false },
   );
 }

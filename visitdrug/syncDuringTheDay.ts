@@ -1,4 +1,4 @@
-import { format, addSeconds } from "date-fns";
+import { addSeconds, format } from "date-fns";
 import { env } from "../lib/env.ts";
 import { directusClient } from "../lib/directus.ts";
 import { readItems } from "@directus/sdk";
@@ -17,14 +17,14 @@ async function job() {
         sort: ["-dateupdate"],
         limit: 1,
         fields: ["dateupdate"],
-      })
+      }),
     );
 
     let lastDateUpdate = format(new Date(), "yyyy-MM-dd");
     if (getLastHlinkData.length) {
       lastDateUpdate = format(
         addSeconds(getLastHlinkData[0].dateupdate, 1),
-        "yyyy-MM-dd HH:mm:ss"
+        "yyyy-MM-dd HH:mm:ss",
       );
     }
     const visitdrug = await listJhcisVisitDrugItem(lastDateUpdate);
@@ -42,7 +42,7 @@ export function triggerSyncDuringTheDay() {
   Deno.cron("syncDuringTheDay cronjob", schedule, async () => {
     info(
       `[syncDuringTheDay] running syncDuringTheDay ${schedule} NOW IS ` +
-        new Date()
+        new Date(),
     );
     try {
       await job();

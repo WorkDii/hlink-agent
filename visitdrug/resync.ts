@@ -47,7 +47,7 @@ async function countAll(startDate: string) {
     from visitdrug v
     where dateupdate >= ? and pcucode = ? and dateupdate >=?`,
     [env.DRUG_SYNC_START_DATE, env.PCU_CODE, startDate]
-  )) as [(RowDataPacket & { count: Number })[]];
+  )) as Array<RowDataPacket & { count: number }>[];
   if (parseInt(countHLinkServer) !== data[0].count) {
     info(`[rsync] countAll jhcis: ${data[0].count} hlink: ${countHLinkServer}`);
     await countMonth(startDate);
@@ -61,14 +61,13 @@ async function countMonth(startDate: string) {
     where dateupdate >= ? and pcucode = ? and dateupdate >=?
     group by YEAR(dateupdate), MONTH(dateupdate)`,
     [env.DRUG_SYNC_START_DATE, env.PCU_CODE, startDate]
-  )) as [
-    (RowDataPacket & {
+  )) as Array<
+    RowDataPacket & {
       year: number;
       month: number;
       count: number;
-    })[]
-  ];
-
+    }
+  >[];
   await pMap(
     jhcisData,
     async (jD) => {
@@ -123,12 +122,12 @@ async function countDay(
       startDateOfThisMonth,
       startDateOfNextMonth,
     ]
-  )) as [
-    (RowDataPacket & {
+  )) as Array<
+    RowDataPacket & {
       dateupdate: Date;
-      count: Number;
-    })[]
-  ];
+      count: number;
+    }
+  >[];
   await pMap(
     jhcisData,
     async (jD) => {
@@ -177,8 +176,9 @@ export function triggerDataReSync() {
   countAll(oneYearAgo).then(() => {
     console.log("done resync visitdrug", new Date().toISOString());
   });
-  Deno.cron("resync data cronjob", "30 3 * * *", async () => {
-    info(`[rsync] running a task at ' 30 3 * * *' NOW IS ` + new Date());
+  Deno.cron("resync data cronjob", "30 19 * * *", async () => {
+    // utc time
+    info(`[rsync] running a task at ' 30 19 * * *' NOW IS ` + new Date());
     try {
       const oneYearAgo = format(
         startOfDay(addYears(new Date(), -1)),
