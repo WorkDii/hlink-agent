@@ -15,4 +15,4 @@ export const con = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-});
+}) as any;
