@@ -31,7 +31,7 @@ export function triggerCDrugReSync() {
   syncCDrug().then(() => {
     console.log("done resync cdrug", new Date().toISOString());
   });
-  Deno.cron("resync data cronjob", "40 */3 * * *", async () => {
+  Deno.cron("resync data cronjob", "40 */6 * * *", async () => {
     try { 
       await syncCDrug();
       info("[rsync] done resync cdrug " + new Date().toISOString());

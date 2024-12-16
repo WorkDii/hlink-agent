@@ -6,4 +6,6 @@ export interface CDrug {
   drugtype?: string;
   drugcode24?: string;
   tmtcode?: string;
+  lotunit?: string;
+  packunit?: string;
 }

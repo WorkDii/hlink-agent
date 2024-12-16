@@ -2,9 +2,11 @@
   "version": "4",
   "specifiers": {
     "jsr:@hono/hono@^4.4.11": "4.4.11",
+    "jsr:@std/assert@*": "1.0.9",
     "jsr:@std/dotenv@~0.224.2": "0.224.2",
     "jsr:@std/fmt@~0.225.5": "0.225.5",
     "jsr:@std/fs@^1.0.0-rc.3": "1.0.0-rc.3",
+    "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/io@~0.224.3": "0.224.3",
     "jsr:@std/log@~0.224.4": "0.224.4",
     "npm:@directus/sdk@^16.1.1": "16.1.1",
@@ -18,6 +20,12 @@
     "@hono/hono@4.4.11": {
       "integrity": "9a739ef99e0b9c5ecb1b25dc8dc4f928cb34d1a6cfdca29a1637db9cbbd660cd"
     },
+    "@std/assert@1.0.9": {
+      "integrity": "a9f0c611a869cc791b26f523eec54c7e187aab7932c2c8e8bea0622d13680dcd",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
     "@std/dotenv@0.224.2": {
       "integrity": "29081695357e4534696c9e986b2560be29c141ccf52daa32b6c20ff5b5c64ab9"
     },
@@ -26,6 +34,9 @@
     },
     "@std/fs@1.0.0-rc.3": {
       "integrity": "50a0a4366e7e2bd444ed0831757e3d9dd39b1d24612764bbb9ac7725169903f4"
+    },
+    "@std/internal@1.0.5": {
+      "integrity": "54a546004f769c1ac9e025abd15a76b6671ddc9687e2313b67376125650dc7ba"
     },
     "@std/io@0.224.3": {
       "integrity": "b402edeb99c6b3778d9ae3e9927bc9085b170b41e5a09bbb7064ab2ee394ae2f"
