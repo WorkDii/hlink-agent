@@ -54,6 +54,20 @@ async function countAll(startDate: string) {
   }
 }
 
+export function getStartEndDate(jd: { year: number; month: number }) {
+  let nextMonth = jd.month + 1;
+  let nextYear = jd.year;
+  if (nextMonth > 12) {
+    nextMonth = 1;
+    nextYear = jd.year + 1;
+  }
+  const startDateOfThisMonth = `${jd.year}-${jd.month.toString().padStart(2, "0")}-01`;
+  const startDateOfNextMonth = `${nextYear}-${nextMonth
+    .toString()
+    .padStart(2, "0")}-01`;
+  return { startDateOfThisMonth, startDateOfNextMonth };
+}
+
 async function countMonth(startDate: string) {
   const [jhcisData] = (await con.query(
     `select YEAR(dateupdate) as year, MONTH(dateupdate) as month, count(*) as count
@@ -71,12 +85,10 @@ async function countMonth(startDate: string) {
   await pMap(
     jhcisData,
     async (jD) => {
-      const startDateOfThisMonth = `${jD.year}-${jD.month
-        .toString()
-        .padStart(2, "0")}-01`;
-      const startDateOfNextMonth = `${jD.year}-${(jD.month + 1)
-        .toString()
-        .padStart(2, "0")}-01`;
+      const { startDateOfThisMonth, startDateOfNextMonth } = getStartEndDate({
+        year: jD.year,
+        month: jD.month,
+      });
       const hlinkData = await directusClient.request<
         {
           count: string;
