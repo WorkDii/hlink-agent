@@ -29,7 +29,7 @@ export async function listJhcisCDrug(drugcode24s: string[]) {
         ) as dt on
       dt.drugcode = cd.drugcode
     where
-      cd.drugcode24 in (${drugcode24s.join(',')})`
+      cd.drugcode24 in (${drugcode24s.map(i => `'${i}'`).join(',')})`
   )) as unknown as Array<CDrug>[];
   return data;
 }

@@ -10,7 +10,7 @@ async function syncCDrug() {
   const exitCdrug = (await directusClient.request<{ id: string }[]>(readItems('cdrug', { limit: -1, fields: ['id'] }))).map(i => i.id)
   const jhcisCdrug = await listJhcisCDrug(hospitalDrug.map(d => d.drugcode24));
   await pMap(jhcisCdrug, async (jCdurg) => {
-    const id = `${env.PCU_CODE}_${jCdurg.drugcode}`;
+    const id = `${env.PCU_CODE}_${jCdurg.drugcode}`.replaceAll('/','_');
     if (exitCdrug.includes(id)) {
       await directusClient.request(updateItem("cdrug", id, {
         ...jCdurg,
